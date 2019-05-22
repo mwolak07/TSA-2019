@@ -3,7 +3,6 @@ MakeSPP-2019.json
 .vscode
 .idea
 makesppenv
-sendText.py
 __pycache__
 sight_engine_KEY.txt
 email_credentials.txt
