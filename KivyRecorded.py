@@ -51,7 +51,7 @@ server.starttls()
 server.login(msg['From'], password)
 
 # Read in twilio credentials
-credentials = oepn("twilio_credentials", "r")
+credentials = open("twilio_credentials.txt", "r")
 
 
 account_sid = credentials.readline()
