@@ -163,7 +163,7 @@ class KivyCamera(Image):
 
 
 # Definition of Kivy App instance
-class DisplayWindow(App):
+class DetectProtect(App):
     # Required for sharing of weaponFlag across threads
     global weaponFlag
 
@@ -220,4 +220,4 @@ class DisplayWindow(App):
 
 
 # Running the app
-DisplayWindow().run()
+DetectProtect().run()
