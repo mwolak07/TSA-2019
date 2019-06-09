@@ -1,0 +1,28 @@
+#:kivy 1.10.1
+
+#:import ScreenManager kivy.uix.screenmanager.ScreenManager
+#:import Screen kivy.uix.screenmanager.ScreenManager
+
+ScreenManager:
+    StartMenuScreen:
+    SettingsScreen:
+
+<StartMenuScreen>:
+    name: 'start'
+    BoxLayout:
+        orientation: 'vertical'
+        Button:
+            text: 'First Button on Menu'
+            on_press: app.root.current = 'settings'
+        Button:
+            text: 'Second Button on Menu'
+
+<SettingsScreen>:
+    name: 'settings'
+    BoxLayout:
+        orientation: 'vertical'
+        Button:
+            text: 'First Button on Settings'
+            on_press: app.root.current = 'start'
+        Button:
+            text: 'Second Button on Settings'
