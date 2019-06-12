@@ -9,20 +9,22 @@ ScreenManager:
 
 <StartMenuScreen>:
     name: 'start'
-    BoxLayout:
-        orientation: 'vertical'
+    FloatLayout:
         Button:
-            text: 'First Button on Menu'
+            text: 'Start Gun Detector'
+            size_hint: (0.5, 0.15)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+        
+        Button:
+            text: 'Go To Settings'
+            size_hint: (0.5, 0.15)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             on_press: app.root.current = 'settings'
-        Button:
-            text: 'Second Button on Menu'
 
 <SettingsScreen>:
     name: 'settings'
-    BoxLayout:
-        orientation: 'vertical'
-        Button:
-            text: 'First Button on Settings'
-            on_press: app.root.current = 'start'
-        Button:
-            text: 'Second Button on Settings'
+    FloatLayout:
+        Label:
+            text: 'Welcome to Settings'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (0.5, 0.15)
