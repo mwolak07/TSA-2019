@@ -19,7 +19,7 @@ ScreenManager:
             text: 'Go To Settings'
             size_hint: (0.5, 0.15)
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
-            on_press: app.root.current = 'settings'
+            on_press: app.open_settings()
 
 <SettingsScreen>:
     name: 'settings'
