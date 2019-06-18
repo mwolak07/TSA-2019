@@ -19,66 +19,70 @@ import smtplib
 import time
 
 
-# Read in sightengine credentials
+# Read in Sightengine credentials
 credentials = open("sight_engine_KEY.txt", "r")
 api_user = credentials.readline()
 api_secret = credentials.readline()
 credentials.close()
 
-# Create a new sightengine client with credentials
+# Instantiate Sightengine client with credentials
 client = SightengineClient(api_user, api_secret)
 
-# Create new instance of a message object
+# Instantiate message object
 msg = MIMEMultipart()
 
-# Body of Text and Email Alerts
-message = "Gun Detected! ACT IMMEDIATELY!"
-
-# Reads email account credentials
+# Read in credentials for messenger email
 credentials = open("email_credentials.txt", "r")
 
-# setup the parameters of the message
+# Set up the parameters of the message
 msg['From'] = credentials.readline()
 password = credentials.readline()
 credentials.close()
 msg['To'] = "kaushikpprakash@gmail.com"
 msg['Subject'] = "Gun Detected! ACT IMMEDIATELY!"
+
+# Body of text and email Alerts
+message = "Gun Detected! ACT IMMEDIATELY!"
  
-# add in the message body
+# Add in the message body
 msg.attach(MIMEText(message, 'plain'))
  
-# create server
+# Create server to send email
 server = smtplib.SMTP('smtp.gmail.com: 587')
- 
 server.starttls()
  
-# Login Credentials for sending the mail
+# Login to the messenger account with proper credentials
 server.login(msg['From'], password)
 
 # Read in twilio credentials
 credentials = open("twilio_credentials.txt", "r")
-
-
 account_sid = credentials.readline()
 auth_token = credentials.readline()
 credentials.close()
+
+# Instantiate Twilio object
 twilioClient = Client(account_sid, auth_token)
 
-# Global variables for marking detection and timing threads
-detected = False
+# Global variables for marking weapon detection and managing threads
 request_complete = True
+detected = False
 capture = None
 process = None
 
+
+# Check if a weapon was detected
 def analyzeFrame(inputFrame):
+    
     # Adding required global variables
     global detected
     global request_complete
+    
     # Marks current thread as active, to not initialize another one
     request_complete = False
 
-    # Only requests from API/ sends messages if gun hasn't been detected
+    # Only requests from API/sends messages if gun hasn't been detected
     if not detected:
+        
         # Stores frame in temporary file
         inputFrame.save("Image.jpg")
         print("file saved")
@@ -92,36 +96,47 @@ def analyzeFrame(inputFrame):
 
         # Checks to make sure API request didn't fail
         if output['status'] != 'failure':
+            
             # Checks to see if weapon was detected
             if output['weapon'] > 0.1:
                 print("detected")
 
-                # Twilio text messages sent
-                message = twilioClient.messages \
-                    .create(
-                    body="Gun Detected! ACT IMMEDIATELY!",
-                    from_='+18482334348',
-                    to='+17327725794'
-                )
-                message = twilioClient.messages \
-                    .create(
-                    body="Gun Detected! ACT IMMEDIATELY!",
-                    from_='+18482334348',
-                    to='+18482188011'
-                )
+                sendNotifications()
 
-                # Email messages sent via the server.
-                server.sendmail(msg['From'], msg['To'], msg.as_string())
-                server.sendmail(msg['From'], "mwolak07@gmail.com", msg.as_string())
-                server.quit()
-                print("successfully sent email to %s:" % (msg['To']))
-
-                # Marks gun as detected in global variable
+                # Marks that a gun was detected
                 detected = True
-                print(message.sid)
 
     # Marks thread as finished, another can be started
     request_complete = True
+
+
+# Sends email and text messages
+def sendNotifications():
+   
+    # Twilio text messages sent
+    message = twilioClient.messages \
+        .create(
+        body="Gun Detected! ACT IMMEDIATELY!",
+        from_='+18482334348',
+        to='+17327725794'
+    )
+   
+    message = twilioClient.messages \
+        .create(
+        body="Gun Detected! ACT IMMEDIATELY!",
+        from_='+18482334348',
+        to='+18482188011'
+    )
+
+    # Email messages sent via the server.
+    server.sendmail(msg['From'], msg['To'], msg.as_string())
+    server.sendmail(msg['From'], "mwolak07@gmail.com", msg.as_string())
+    server.quit()
+    print("successfully sent email to %s:" % (msg['To']))
+    print(message.sid)
+    
+
+
 
 # Declare both screens
 class StartMenuScreen(Screen):
@@ -148,6 +163,7 @@ class Detector(Image):
 
     # Callback for camera, grabs and displays frame along with starting threaded analysis
     def update(self, dt):
+        
         # Required for timing thread creation
         global request_complete
 
@@ -161,8 +177,10 @@ class Detector(Image):
 
             # Thread is not active, new one is started
             if request_complete:
+                
                 # Old thread is shut down
                 self.process.join()
+                
                 # Frame is copied to a PILImage, and threaded frame analysis is started
                 newFrame = PILImage.fromarray(frame)
                 self.process = Thread(target=analyzeFrame, kwargs={'inputFrame': newFrame})
@@ -170,10 +188,13 @@ class Detector(Image):
 
             # Frame is buffered and converted to a kivy texture
             buf = cv2.flip(frame, 0).tostring()
+            
             # Texture defined
             image_texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='rgb')
+            
             # Texture filled form buffer with blit_buffer
             image_texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
+            
             # Displaying image from the texture
             self.texture = image_texture
 
