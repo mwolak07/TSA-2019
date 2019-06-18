@@ -9,4 +9,4 @@ Target Features:
 - Select video source
     - Read Pre-Recorded File
     - Choose webcam inputs
-- 
+- Add flash flood warning signal/sound when gun is detected

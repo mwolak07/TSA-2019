@@ -15,7 +15,7 @@ ScreenManager:
             on_release: app.root.current = 'detector'
         
         Button:
-            text: 'Go To Settings'
+            text: 'Gun Detector Settings'
             size_hint: (0.5, 0.15)
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             on_release: app.open_settings()
@@ -35,19 +35,20 @@ ScreenManager:
 
         Label:
             height: 20
-            text: 'deTECT-proTECT'
+            text: 'deTECT proTECT'
+            font_size: '20sp'
             pos_hint: {'center_x': 0.5, 'center_y': 0.9}
 
         Detector:
             id: detector
-            pos_hint: {'center_x': 0.5, 'center_y': 0.65}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
         Label:
             id: output
+            pos_hint: {'center_x': 0.5, 'center_y': 0.1} 
         
         Button:
             text: 'X'
-            size_hint: (0.05, 0.05)
-            halign: 'center'
-            pos_hint: {'center_x': 0.875, 'center_y': 0.075}
+            size_hint: (0.035, 0.035)
+            pos_hint: {'center_x': 0.985, 'center_y': 0.98}
             on_release: root.exit()
