@@ -62,6 +62,7 @@ twilioClient = Client(account_sid, auth_token)
 # Global variables for marking detection and timing threads
 detected = False
 request_complete = True
+weaponFlag = False
 
 
 def analyzeFrame(inputFrame):
@@ -199,8 +200,8 @@ class DetectProtect(App):
 
         # Dynamic callback (at same rate as video fps) scheduled with Clock to display label for result
         Clock.schedule_interval(self.labelCallback, 1.0/self.fps)
+        
         # Adding attributes to box as widgets
-
         self.layout.add_widget(self.title_text)
         self.layout.add_widget(self.camera)
         self.layout.add_widget(self.output)
