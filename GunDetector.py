@@ -183,6 +183,7 @@ class DetectorScreen(Screen):
         global process
         
         capture = cv2.VideoCapture(0)
+       
         # Initial copy of frame to PILImage to start analysis
         newFrame = PILImage.fromarray(capture.read()[1])
         
@@ -205,22 +206,6 @@ class DetectorScreen(Screen):
         
         # Dynamic callback (at same rate as video fps) scheduled with Clock to display label for result
         Clock.schedule_interval(self.labelCallback, 1.0/fps)
-
-    # def start(self, *largs):
-    #     global capture
-    #     global process
-    #     capture = cv2.VideoCapture(0)
-    #     # Initial copy of frame to PILImage to start analysis
-    #     newFrame = PILImage.fromarray(capture.read()[1])
-        
-    #     # Starts frame analysis on seperate thread
-    #     process = Thread(target=analyzeFrame, kwargs={'inputFrame': newFrame})
-    #     process.start()
-
-    #     self.ids.detector.start_detector(capture=capture, process=process, fps=30)
-        
-    #     # Dynamic callback (at same rate as video fps) scheduled with Clock to display label for result
-    #     Clock.schedule_interval(self.labelCallback, 1.0/self.fps)
 
     def exit(self):
         global capture

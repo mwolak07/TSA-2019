@@ -30,20 +30,24 @@ ScreenManager:
 
 <DetectorScreen>:
     name: 'detector'
-    BoxLayout:
+    FloatLayout:
         orientation: 'vertical'
 
         Label:
             height: 20
-            size_hint_y: None
-            text: 'de-TECT pro-TECT'
+            text: 'deTECT-proTECT'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.9}
 
         Detector:
             id: detector
+            pos_hint: {'center_x': 0.5, 'center_y': 0.65}
 
         Label:
             id: output
         
         Button:
-            text: 'Quit'
+            text: 'X'
+            size_hint: (0.05, 0.05)
+            halign: 'center'
+            pos_hint: {'center_x': 0.875, 'center_y': 0.075}
             on_release: root.exit()
