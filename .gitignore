@@ -7,3 +7,7 @@ __pycache__
 sight_engine_KEY.txt
 email_credentials.txt
 twilio_credentials.txt
+gundetector.ini
+KivyLive.py
+KivyRecorded.py
+Image.jpg
