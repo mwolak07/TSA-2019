@@ -13,6 +13,7 @@ from kivy.core.window import Window
 from email.mime.text import MIMEText
 import threading
 from PIL import Image as PILImage
+import PIL
 from kivy.base import EventLoop
 import cv2
 import smtplib
@@ -20,11 +21,9 @@ import time
 
 
 class StartMenuScreen(Screen):
-    pass
-
-class SettingsScreen(Screen):
-    pass
-
+    # Closes the window
+    def exit(self):
+        EventLoop.close()
 
 # Class for handling all of the display elements of the detector
 class DetectorScreen(Screen):
@@ -37,11 +36,18 @@ class DetectorScreen(Screen):
     # Updates detection label at specified time interval
     def labelCallback(self, dt):
         if self.ids.detector.detected:
-            self.ids.output.text = "Weapon detected! Call the proper authorities!"
+            self.ids.output.text = "Weapon detected! Contacting authorities!"
         else:
             self.ids.output.text = ""
+    
+    # Safely stops the video stream, closes threads, and goes to the start menu
+    def goBack(self):
+        if self.ids.detector.capture != None:
+            self.ids.detector.capture.release()
+            self.ids.detector.analysisThead.join()
+        app.root.current = 'start'
         
-    # Safely stops the video stream and closes threads upon exit
+    # Safely stops the video stream, closes threads, and closes window
     def exit(self):
         if self.ids.detector.capture != None:
             self.ids.detector.capture.release()
@@ -162,6 +168,13 @@ class Detector(Image):
                 # Start new frame analysis
                 self.analysisThead = threading.Thread(target=self.analyzeFrame, kwargs={'inputFrame': newFrame})
                 self.analysisThead.start()
+            
+            scale_percent = 165 # percent of original size
+            width = int(frame.shape[1] * scale_percent / 100)
+            height = int(frame.shape[0] * scale_percent / 100)
+            dim = (width, height)
+            # resize image
+            frame = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
 
             # Frame is buffered and converted to a Kivy texture
             buf = cv2.flip(frame, 0).tostring()
@@ -246,13 +259,14 @@ class GunDetector(App):
         return super().build()
     
     def build_config(self, config):
-        config.setdefaults('Video Settings', {
-            'source': 'Pre-Recorded'
+        config.setdefaults('App Settings', {
+            'source': 'Live Feed',
+            'path': '/Users/Kaushik/Documents/TSA-2019'
         })
         return super().build_config(config)
  
     def build_settings(self, settings):
-        settings.add_json_panel('Panel Name',
+        settings.add_json_panel('App Settings',
                                 self.config,
                                 data=settings_json)
 
@@ -263,4 +277,5 @@ class GunDetector(App):
 
 if __name__ == '__main__':
     Window.fullscreen = 'auto'
-    GunDetector().run()
+    app = GunDetector()
+    app.run()

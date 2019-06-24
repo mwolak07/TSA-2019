@@ -2,7 +2,6 @@
 
 ScreenManager:
     StartMenuScreen:
-    SettingsScreen:
     DetectorScreen:
 
 <StartMenuScreen>:
@@ -19,14 +18,12 @@ ScreenManager:
             size_hint: (0.5, 0.15)
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             on_release: app.open_settings()
-
-<SettingsScreen>:
-    name: 'settings'
-    FloatLayout:
-        Label:
-            text: 'Welcome to Settings'
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            size_hint: (0.5, 0.15)
+        
+        Button:
+            text: 'X'
+            size_hint: (0.035, 0.035)
+            pos_hint: {'center_x': 0.97, 'center_y': 0.97}
+            on_release: root.exit()
 
 <DetectorScreen>:
     name: 'detector'
@@ -36,19 +33,28 @@ ScreenManager:
         Label:
             height: 20
             text: 'deTECT proTECT'
-            font_size: '20sp'
-            pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+            font_size: '25sp'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.94}
 
         Detector:
             id: detector
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.55}
 
         Label:
             id: output
-            pos_hint: {'center_x': 0.5, 'center_y': 0.1} 
+            font_size: '30sp'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.15} 
         
         Button:
             text: 'X'
             size_hint: (0.035, 0.035)
+            font_size: '18sp'
             pos_hint: {'center_x': 0.97, 'center_y': 0.97}
             on_release: root.exit()
+
+        Button:
+            text: 'Go Back'
+            size_hint: (0.075, 0.035)
+            font_size: '18sp'
+            pos_hint: {'center_x': 0.065, 'center_y': 0.97}
+            on_release: root.goBack()
