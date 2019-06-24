@@ -13,7 +13,6 @@ from kivy.core.window import Window
 from email.mime.text import MIMEText
 import threading
 from PIL import Image as PILImage
-import PIL
 from kivy.base import EventLoop
 import cv2
 import smtplib
@@ -115,7 +114,10 @@ class Detector(Image):
         self.detected = False
         self.requestComplete = False
 
-        self.capture = cv2.VideoCapture(0)  # Use webcam as main video stream
+        if app.source == 'Live Feed':
+            self.capture = cv2.VideoCapture(0)  # Use webcam as main video stream
+        else:
+            self.capture = cv2.VideoCapture(str(app.path)) # Use local file
 
         # Find OpenCV version
         (major_ver, minor_ver, subminor_ver) = cv2.__version__.split('.')
@@ -169,12 +171,8 @@ class Detector(Image):
                 self.analysisThead = threading.Thread(target=self.analyzeFrame, kwargs={'inputFrame': newFrame})
                 self.analysisThead.start()
             
-            scale_percent = 165 # percent of original size
-            width = int(frame.shape[1] * scale_percent / 100)
-            height = int(frame.shape[0] * scale_percent / 100)
-            dim = (width, height)
-            # resize image
-            frame = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
+            # Scale up image to be displayed
+            frame = cv2.resize(frame, (int(frame.shape[1] * 1.65), int(frame.shape[0] * 1.65)), interpolation=cv2.INTER_AREA)
 
             # Frame is buffered and converted to a Kivy texture
             buf = cv2.flip(frame, 0).tostring()
@@ -259,21 +257,27 @@ class GunDetector(App):
         return super().build()
     
     def build_config(self, config):
+        self.source = 'Pre-Recorded'
+        self.path = '/Users/Kaushik/Documents/TSA-2019/storerobberytest.mp4'
         config.setdefaults('App Settings', {
-            'source': 'Live Feed',
-            'path': '/Users/Kaushik/Documents/TSA-2019'
+            'source': self.source,
+            'path': self.path
         })
-        return super().build_config(config)
  
     def build_settings(self, settings):
         settings.add_json_panel('App Settings',
                                 self.config,
                                 data=settings_json)
-
-        return super().build_settings(settings)
+        print("current source", self.source)
+        print("current path", self.path)
     
     def on_config_change(self, config, section, key, value):
-        print(self, config, section, key, value)
+        if key == 'source':
+            print("changed source")
+            self.source = value
+        elif key == 'path':
+            print("changed path")
+            self.path = value
 
 if __name__ == '__main__':
     Window.fullscreen = 'auto'

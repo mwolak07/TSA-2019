@@ -5,7 +5,7 @@ settings_json = json.dumps([
      'title': 'Select Video Source',
      'desc': 'Choose your video source',
      'section': 'App Settings',
-     'options': ['Pre-Recorded', 'Live Feed'],
+     'options': ['Live Feed', 'Pre-Recorded'],
      'key': 'source'},
      {'type': 'path',
      'title': 'Choose Pre-Recorded File',
