@@ -45,7 +45,7 @@ class DetectorScreen(Screen):
     def exit(self):
         if self.ids.detector.capture != None:
             self.ids.detector.capture.release()
-            self.ids.detector.process.join()
+            self.ids.detector.analysisThead.join()
         EventLoop.close()
         
 class Detector(Image):
@@ -262,4 +262,5 @@ class GunDetector(App):
         print(self, config, section, key, value)
 
 if __name__ == '__main__':
+    Window.fullscreen = 'auto'
     GunDetector().run()
