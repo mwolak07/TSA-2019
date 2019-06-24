@@ -10,3 +10,4 @@ Target Features:
     - Read Pre-Recorded File
     - Choose webcam inputs
 - Add flash flood warning signal/sound when gun is detected
+- Custom input contacts

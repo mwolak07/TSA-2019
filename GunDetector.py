@@ -29,7 +29,7 @@ class DetectorScreen(Screen):
 
     # Start the detector before the screen is displayed
     def on_pre_enter(self, *args):
-        self.ids.detector.start_detector(self)
+        self.ids.detector.initDetector(self)
         return self
 
     # Updates detection label at specified time interval
@@ -51,15 +51,16 @@ class DetectorScreen(Screen):
         if self.ids.detector.capture != None:
             self.ids.detector.capture.release()
             self.ids.detector.analysisThead.join()
+        self.ids.detector.server.quit()
         EventLoop.close()
         
 class Detector(Image):
     
-    def __init__(self, **kwargs):
-        super(Detector, self).__init__(**kwargs)
+    def initDetector(self, DetectorScreen, **kwargs):
         self.data_lock = threading.Lock()   # Used to safely modify the variables used by multiple threads
         self.initCreds()                    # Reinitialize credentials in case of updated parameters
-
+        self.start_detector(DetectorScreen)
+        
     def initCreds(self):
         # Read in Sightengine credentials
         credentials = open("sight_engine_KEY.txt", "r")
@@ -78,8 +79,9 @@ class Detector(Image):
 
         # Set up the parameters of the message
         self.msg['From'] = credentials.readline()
-        self.msg['To'] = "kaushikpprakash@gmail.com"
         self.msg['Subject'] = "Gun Detected! ACT IMMEDIATELY!"
+        self.emailcontacts = app.emails.split(', ')
+        print(self.emailcontacts)
 
         # Get information for logging into email account
         password = credentials.readline()
@@ -93,6 +95,7 @@ class Detector(Image):
         
         # Create server to send email
         self.server = smtplib.SMTP('smtp.gmail.com: 587')
+        print('server started')
         self.server.starttls()
         
         # Login to the messenger account with proper credentials
@@ -242,11 +245,11 @@ class Detector(Image):
             to='+18482188011'
         )
 
-        # Email messages sent via the server.
-        self.server.sendmail(self.msg['From'], self.msg['To'], self.msg.as_string())
-        self.server.sendmail(self.msg['From'], "mwolak07@gmail.com", self.msg.as_string())
-        self.server.quit()
-        print("successfully sent email to %s:" % (self.msg['To']))
+        # Email messages sent via the server
+        for email in self.emailcontacts:
+            self.server.sendmail(self.msg['From'], email, self.msg.as_string())
+            print("successfully sent email to %s:" % email)
+        
 class ScreenManager(ScreenManager):
     pass
 
@@ -259,25 +262,28 @@ class GunDetector(App):
     def build_config(self, config):
         self.source = 'Pre-Recorded'
         self.path = '/Users/Kaushik/Documents/TSA-2019/storerobberytest.mp4'
+        self.emails = 'kaushikpprakash@gmail.com, mwolak07@gmail.com'
         config.setdefaults('App Settings', {
             'source': self.source,
-            'path': self.path
+            'path': self.path,
+            'emails': self.emails
         })
  
     def build_settings(self, settings):
         settings.add_json_panel('App Settings',
                                 self.config,
                                 data=settings_json)
-        print("current source", self.source)
-        print("current path", self.path)
     
     def on_config_change(self, config, section, key, value):
         if key == 'source':
-            print("changed source")
+            print("changed source", value)
             self.source = value
         elif key == 'path':
-            print("changed path")
+            print("changed path", value)
             self.path = value
+        elif key == 'emails':
+            print("changed emails", value)
+            self.emails = value
 
 if __name__ == '__main__':
     Window.fullscreen = 'auto'
