@@ -16,5 +16,10 @@ settings_json = json.dumps([
      'title': 'Emergency Email Contacts',
      'desc': 'Enter emergency contact emails, seperated by a comma and a space',
      'section': 'App Settings',
-     'key': 'emails'}
+     'key': 'emails'},
+     {'type': 'string',
+     'title': 'Emergency Phone Numbers',
+     'desc': 'Enter emergency phone numbers, seperated by a comma and a space',
+     'section': 'App Settings',
+     'key': 'numbers'}
      ])
