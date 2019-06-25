@@ -146,8 +146,7 @@ def download_listing_images(listing_links, target_dir, **kwargs):
         url_check = check_url(listing_links[link_number])  # Ensuring url is OK
         # Url is OK, can proceed
         if url_check[0]:
-            # driver.get(listing_links[link_number])
-            driver.get("https://medium.com/")
+            driver.get(listing_links[link_number])
             listing_page_html = driver.page_source
             listing_page = BeautifulSoup(listing_page_html, 'lxml')
             print(listing_page)
