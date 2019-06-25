@@ -14,6 +14,7 @@ from email.mime.text import MIMEText
 import threading
 from PIL import Image as PILImage
 from kivy.base import EventLoop
+import os
 import cv2
 import smtplib
 import time
@@ -52,6 +53,7 @@ class DetectorScreen(Screen):
             self.ids.detector.capture.release()
             self.ids.detector.analysisThead.join()
         self.ids.detector.server.quit()
+
         EventLoop.close()
         
 class Detector(Image):
@@ -81,7 +83,6 @@ class Detector(Image):
         self.msg['From'] = credentials.readline()
         self.msg['Subject'] = "Gun Detected! ACT IMMEDIATELY!"
         self.emailcontacts = app.emails.split(', ')
-        print(self.emailcontacts)
 
         # Get information for logging into email account
         password = credentials.readline()
@@ -109,6 +110,7 @@ class Detector(Image):
 
         # Instantiate Twilio object
         self.twilioClient = Client(account_sid, auth_token)
+        self.phoneNumbers = app.numbers.split(', ')
 
     # Start initial frame analysis and schedule callbacks
     def start_detector(self, DetectorScreen, **kwargs):
@@ -120,7 +122,7 @@ class Detector(Image):
         if app.source == 'Live Feed':
             self.capture = cv2.VideoCapture(0)  # Use webcam as main video stream
         else:
-            self.capture = cv2.VideoCapture(str(app.path)) # Use local file
+            self.capture = cv2.VideoCapture(app.path) # Use local file
 
         # Find OpenCV version
         (major_ver, minor_ver, subminor_ver) = cv2.__version__.split('.')
@@ -177,8 +179,8 @@ class Detector(Image):
             # Scale up image to be displayed
             frame = cv2.resize(frame, (int(frame.shape[1] * 1.65), int(frame.shape[0] * 1.65)), interpolation=cv2.INTER_AREA)
 
-            # Frame is buffered and converted to a Kivy texture
-            buf = cv2.flip(frame, 0).tostring()
+            # Frame is buffered and converted to a string
+            buf = cv2.flip(frame, -1).tostring()
             
             # Create texture to display image
             imageTexture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='rgb')
@@ -219,6 +221,8 @@ class Detector(Image):
 
                     self.notifyAuthorities() # Alert authorities
 
+                    os.system('say "Alert! A weapon has been detected! Take action now!"')
+
                     # Marks that a gun was detected
                     with self.data_lock:
                         self.detected = True
@@ -229,21 +233,15 @@ class Detector(Image):
     
     # Sends email and text messages
     def notifyAuthorities(self):
-    
-        # Twilio text messages sent
-        message = self.twilioClient.messages \
-            .create(
-            body="Gun Detected! ACT IMMEDIATELY!",
-            from_='+18482334348',
-            to='+17327725794'
-        )
-    
-        message = self.twilioClient.messages \
-            .create(
-            body="Gun Detected! ACT IMMEDIATELY!",
-            from_='+18482334348',
-            to='+18482188011'
-        )
+
+        for number in self.phoneNumbers:
+            # Twilio text messages sent
+            message = self.twilioClient.messages \
+                .create(
+                body="Gun Detected! ACT IMMEDIATELY!",
+                from_='+18482334348',
+                to=number
+            )
 
         # Email messages sent via the server
         for email in self.emailcontacts:
@@ -257,23 +255,27 @@ class GunDetector(App):
     def build(self):
         self.settings_cls = SettingsWithSidebar
         self.use_kivy_settings = False
+
+        self.source = self.config.get('App Settings', 'source')
+        self.path = self.config.get('App Settings', 'path')
+        self.emails = self.config.get('App Settings', 'emails')
+        self.numbers = self.config.get('App Settings', 'numbers')
+
         return super().build()
     
     def build_config(self, config):
-        self.source = 'Pre-Recorded'
-        self.path = '/Users/Kaushik/Documents/TSA-2019/storerobberytest.mp4'
-        self.emails = 'kaushikpprakash@gmail.com, mwolak07@gmail.com'
         config.setdefaults('App Settings', {
-            'source': self.source,
-            'path': self.path,
-            'emails': self.emails
+            'source': 'Pre-Recorded',
+            'path': '/Users/Kaushik/TSA-2019/storerobberytest.mp4',
+            'emails': 'kaushikpprakash@gmail.com, mwolak07@gmail.com',
+            'numbers': '7327725794, 8482188011'
         })
- 
+
     def build_settings(self, settings):
         settings.add_json_panel('App Settings',
                                 self.config,
                                 data=settings_json)
-    
+        
     def on_config_change(self, config, section, key, value):
         if key == 'source':
             print("changed source", value)
@@ -284,6 +286,9 @@ class GunDetector(App):
         elif key == 'emails':
             print("changed emails", value)
             self.emails = value
+        elif key == 'numbers':
+            print("changed numbers", value)
+            self.numbers = value
 
 if __name__ == '__main__':
     Window.fullscreen = 'auto'

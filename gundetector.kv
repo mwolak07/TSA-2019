@@ -6,23 +6,45 @@ ScreenManager:
 
 <StartMenuScreen>:
     name: 'start'
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/mainbackground13.jpg'
+            
+            
     FloatLayout:
+
+        Label:
+            text: 'DeTECT-ProTECT'
+            font_size: '25sp'
+            color: 1, 1, 1, 1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.85}
+
         Button:
-            text: 'Start Gun Detector'
-            size_hint: (0.5, 0.15)
+            text: 'Start Detector'
+            size_hint: (0.35, 0.15)
             pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_color: (1, 0, 0, 1)
+            font_size: '25sp'
             on_release: app.root.current = 'detector'
         
         Button:
-            text: 'Gun Detector Settings'
-            size_hint: (0.5, 0.15)
+            text: 'Open Settings'
+            size_hint: (0.35, 0.15)
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            font_size: '25sp'
             on_release: app.open_settings()
         
         Button:
             text: 'X'
             size_hint: (0.035, 0.035)
-            pos_hint: {'center_x': 0.97, 'center_y': 0.97}
+            pos_hint: {'center_x': 0.98, 'center_y': 0.975}
+            font_size: '18sp'
+            background_normal: ''
+            background_color: (1, 0, 0, 1)
             on_release: root.exit()
 
 <DetectorScreen>:
@@ -48,8 +70,8 @@ ScreenManager:
         Button:
             text: 'X'
             size_hint: (0.035, 0.035)
+            pos_hint: {'center_x': 0.98, 'center_y': 0.975}
             font_size: '18sp'
-            pos_hint: {'center_x': 0.97, 'center_y': 0.97}
             on_release: root.exit()
 
         Button:
