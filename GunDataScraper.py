@@ -146,19 +146,28 @@ def download_listing_images(listing_links, target_dir, **kwargs):
         url_check = check_url(listing_links[link_number])  # Ensuring url is OK
         # Url is OK, can proceed
         if url_check[0]:
-            driver.get(listing_links[link_number])
+            # driver.get(listing_links[link_number])
+            driver.get("https://medium.com/")
             listing_page_html = driver.page_source
             listing_page = BeautifulSoup(listing_page_html, 'lxml')
+            print(listing_page)
             # Checking to make sure html was properly loaded
             if listing_page is not None:
                 # Locating link to image
-                image_link = str(listing_page.find(id="image-main")).split('src')[1].split('"')[1]
-                download_result = download_jpg(image_url=image_link, image_name=str(link_number), image_dir=target_dir)
-                # If download was not successful, success flag is made False and error is printed
-                if not download_result[0]:
+                image_link_search = listing_page.find(id="image-main")
+                # Ensuring image link was actually found
+                if image_link_search is not None:
+                    image_link = str(image_link_search.split('src')[1].split('"')[1])
+                    download_result = download_jpg(image_url=image_link, image_name=str(link_number), image_dir=target_dir)
+                    # If download was not successful, success flag is made False and error is printed
+                    if not download_result[0]:
+                        success = False
+                        print("[ERROR]: problem downloading image, " + str(download_result[1]))
+                # Image link was not found, moves on to next listing
+                else:
                     success = False
-                    print("[ERROR]: problem downloading image, " + str(download_result[1]))
-            # Html was not properly loaded, moves on to next image
+                    print("[ERROR]: could not locate image in listing")
+            # Html was not properly loaded, moves on to next listing
             else:
                 success = False
                 print("[ERROR]: problem loading html for listing")
