@@ -11,3 +11,8 @@ Target Features:
     - Choose webcam inputs
 - Add flash flood warning signal/sound when gun is detected
 - Custom input contacts
+- Phone call to specified phone numbers with message containing location information
+
+Improvements:
+- More Inputs
+    - Sound input of gunfire?
