@@ -12,22 +12,19 @@ ScreenManager:
             size: self.size
             source: 'Images/mainbackground13.jpg'
             
-            
     FloatLayout:
-
         Label:
             text: 'DeTECT-ProTECT'
-            font_size: '25sp'
+            font_size: '35sp'
             color: 1, 1, 1, 1
-            pos_hint: {'center_x': 0.5, 'center_y': 0.85}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.875}
 
         Button:
             text: 'Start Detector'
             size_hint: (0.35, 0.15)
             pos_hint: {'center_x': 0.5, 'center_y': 0.7}
-            color: 0, 0, 0, 1
             background_normal: ''
-            background_color: (1, 0, 0, 1)
+            background_color: (24/255, 44/255, 80/255, 0.8)
             font_size: '25sp'
             on_release: app.root.current = 'detector'
         
@@ -36,6 +33,8 @@ ScreenManager:
             size_hint: (0.35, 0.15)
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             font_size: '25sp'
+            background_normal: ''
+            background_color: (24/255, 44/255, 80/255, 0.8)
             on_release: app.open_settings()
         
         Button:
@@ -49,12 +48,17 @@ ScreenManager:
 
 <DetectorScreen>:
     name: 'detector'
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/mainbackground13.jpg'
     FloatLayout:
         orientation: 'vertical'
 
         Label:
             height: 20
-            text: 'deTECT proTECT'
+            text: 'DeTECT-ProTECT'
             font_size: '25sp'
             pos_hint: {'center_x': 0.5, 'center_y': 0.94}
 
@@ -72,6 +76,8 @@ ScreenManager:
             size_hint: (0.035, 0.035)
             pos_hint: {'center_x': 0.98, 'center_y': 0.975}
             font_size: '18sp'
+            background_normal: ''
+            background_color: (1, 0, 0, 1)
             on_release: root.exit()
 
         Button:
@@ -79,4 +85,6 @@ ScreenManager:
             size_hint: (0.075, 0.035)
             font_size: '18sp'
             pos_hint: {'center_x': 0.065, 'center_y': 0.97}
+            background_normal: ''
+            background_color: (1, 0, 0, 1)
             on_release: root.goBack()
