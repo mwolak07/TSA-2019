@@ -256,14 +256,16 @@ options = Options()
 options.headless = True
 driver = webdriver.Chrome("chromedriver.exe", options=options)
 
+main_page_url = "https://grabagun.com/firearms.html"
+
 # Checks main page url. If it is unavailable, code execution stops as it is impossible to continue
-main_url_check = check_url("https://grabagun.com/firearms.html")
+main_url_check = check_url(main_page_url)
 if not main_url_check[0]:
     print("[ERROR]: problem accessing main site, " + main_url_check[1])
     sys.exit()
 
 # Getting main page html using chromedriver and initializing it as a BeautifulSoup object
-driver.get("https://grabagun.com/firearms.html")
+driver.get(main_page_url)
 main_page_html = driver.page_source
 main_page = BeautifulSoup(main_page_html, 'lxml')
 # Checks to make sure main page html was properly loaded. If not, code execution stops as it is impossible to continue
