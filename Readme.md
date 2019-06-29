@@ -16,3 +16,18 @@ Target Features:
 Improvements:
 - More Inputs
     - Sound input of gunfire?
+
+Dependancies:
+- sightengine
+- opencv
+- twilio
+- kivy
+- google_images_download
+- selenium
+- numpy
+- matplotlib
+- keras
+- validators
+- beautifulsoup4
+- pillow
+- tensorflow
