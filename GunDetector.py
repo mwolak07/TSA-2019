@@ -290,7 +290,7 @@ class GunDetector(App):
     def build_config(self, config):
         config.setdefaults('App Settings', {
             'source': 'Pre-Recorded',
-            'path': '/Users/Kaushik/TSA-2019/storerobberytest.mp4',
+            'path': 'C:/Users/mwola/Desktop/Files/Coding/TSA-2019/storerobberytest.mp4',
             'emails': 'kaushikpprakash@gmail.com, mwolak07@gmail.com',
             'numbers': '7327725794, 8482188011'
         })
