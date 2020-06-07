@@ -17,7 +17,7 @@ Improvements:
 - More Inputs
     - Sound input of gunfire?
 
-Dependancies:
+Dependencies:
 - sightengine
 - opencv
 - twilio
