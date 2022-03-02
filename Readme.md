@@ -1,6 +1,8 @@
-TSA-2019
+# TSA-2019
 
 Team: Kaushik Prakash, Mateusz Wolak
+
+Overview: A program with a GUI meant to detect the presence of firearms in places where they shouldn't be using video cameras, and immidately send out relevant security alerts.
 
 Target Features:
 - Multiple Camera Support
@@ -13,7 +15,7 @@ Target Features:
 - Custom input contacts
 - Phone call to specified phone numbers with message containing location information
 
-Improvements:
+Possible Improvements:
 - More Inputs
     - Sound input of gunfire?
 
