@@ -18,6 +18,9 @@ Target Features:
 Possible Improvements:
 - More Inputs
     - Sound input of gunfire?
+ 
+ UI Samples:
+ ![Home Screen]("Home Screen.png"?raw=true "Home Screen")
 
 Dependencies:
 - sightengine
