@@ -20,7 +20,8 @@ Possible Improvements:
     - Sound input of gunfire?
  
  UI Samples:
- ![Home Screen]("Home Screen.png"?raw=true "Home Screen")
+ ![Home Screen](Home_Screen.png?raw=true "Home Screen")
+ ![Settings Page](Settings_Page.png?raw=true "Settings Page")
 
 Dependencies:
 - sightengine
